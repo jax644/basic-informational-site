@@ -3,8 +3,45 @@
 // localhost:8080/contact-me should take users to contact-me.html
 // 404.html should display any time the user tries to go to a page not listed above.
 
-const PORT = 3000
+// Import HTTP and FS modules by requiring them
+const http = require('http')
+const fs = require('fs')
+const path = require('path')
 
-app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
+
+// Create the server
+const server = http.createServer((req, res) => {
+    let filePath = '';
+    let contentType = 'text/html';
+  
+    // Determine the file path based on the URL
+    switch (req.url) {
+      case '/':
+        filePath = 'index.html';
+        break;
+      case '/about':
+        filePath = 'about.html';
+        break;
+      case '/contact-me':
+        filePath = 'contact-me.html';
+        break;
+      default:
+        filePath = '404.html';
+    }
+  
+    // Read the file and serve it
+    fs.readFile(path.join(__dirname, filePath), (err, content) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end('Server Error');
+      } else {
+        res.writeHead(res.statusCode || 200, { 'Content-Type': contentType });
+        res.end(content);
+      }
+    });
+  });
+
+const PORT = 3000
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
 })
