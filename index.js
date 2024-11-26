@@ -13,7 +13,10 @@
 
 const express = require('express')
 const app = express()
-const PORT = 3000
+const authorRouter = require('./routes/authorRouter')
+
+app.use('/authors', authorRouter)
+
 
 app.get('/', (req,res) => {
   res.sendFile(__dirname + "/index.html")
@@ -32,6 +35,7 @@ app.get('/*', (req,res) => {
   res.sendFile(__dirname + "/404.html")
 })
 
+const PORT = 3000
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
